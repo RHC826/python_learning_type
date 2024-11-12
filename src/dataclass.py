@@ -11,6 +11,7 @@ class ChangeLog:
     def __iter__(self) -> Generator[float | str | int]:
         yield from self.__dict__.values()
 
+
 @dataclass
 class ChangeLogs:
     ChangeLogs: list[ChangeLog]
