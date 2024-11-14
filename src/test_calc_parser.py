@@ -9,18 +9,18 @@ class TestUnionMethod(unittest.TestCase):
         tokenized = r"[('NUMBER', 3), ('PLUS', '+'), ('NUMBER', 5), ('TIMES', '*'), ('LPAREN', '('), ('NUMBER', 2), ('MINUS', '-'), ('NUMBER', 8), ('RPAREN', ')')]"
         self.assertEqual(
             msg="Warning!",
-            first=str(calc_parser.tokenize("3 + 5 * (2 - 8)")),
+            first=str(calc_parser.Parser.tokenize("3 + 5 * (2 - 8)")),
             second=tokenized,
         )
 
     def test_parser(self):
         # テスト
-        TOKENS = calc_parser.tokenize("3 + 5 * (2 - 8)")
+        TOKENS = calc_parser.Parser.tokenize("3 + 5 * (2 - 8)")
         parser = calc_parser.Parser(TOKENS)
         tree = parser.parse()
 
         # テスト
-        result = calc_parser.evaluate(tree)
+        result = calc_parser.Parser.evaluate(tree)
         self.assertEqual(
                 first=result,
                 second=-27

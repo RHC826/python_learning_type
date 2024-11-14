@@ -11,49 +11,6 @@ type Expression = (
 )
 
 
-def tokenize(expression):
-    """tokenize
-
-    Args:
-        expression (str): 数式。中置記法
-
-    Raises:
-        SyntaxError: 数式以外の入力があった場合 None がありうる
-
-    Returns:
-        list[Tokens]: 
-    """
-    # 数字、演算子、括弧に対応する正規表現パターンを定義します
-    token_specification: list[tuple[str, str]] = [
-        ("NUMBER", r"\d+(\.\d*)?"),  # 数字
-        ("PLUS", r"\+"),  # 足し算
-        ("MINUS", r"-"),  # 引き算
-        ("TIMES", r"\*"),  # 掛け算
-        ("DIVIDE", r"/"),  # 割り算
-        ("LPAREN", r"\("),  # 左括弧
-        ("RPAREN", r"\)"),  # 右括弧
-        ("SKIP", r"[ \t]+"),  # 空白とタブ（無視）
-    ]
-    tokens: list[Token] = []
-    # 正規表現のパターンをまとめます
-    tok_regex = "|".join(f"(?P<{pair[0]}>{pair[1]})" for pair in token_specification)
-    for match in re.finditer(tok_regex, expression):
-        kind = match.lastgroup
-        value = match.group()
-        if kind is None:
-            raise SyntaxError(
-                "Unexpected token: Unexpected type.設定された正規表現のパターンに属さない入力があった可能性があります"
-            )
-
-        if kind == "NUMBER":
-            value = float(value) if "." in value else int(value)
-        elif kind == "SKIP":
-            continue
-
-        tokens.append((kind, value))
-    return tokens
-
-
 class Parser:
     """Parser
     list[Tokens] -> Expression
@@ -71,6 +28,50 @@ class Parser:
     def __init__(self, tokens: list[Token]):
         self.tokens = tokens
         self.pos = 0
+
+    @staticmethod
+    def tokenize(expression:str) -> list[Token]:
+        """tokenize
+
+        Args:
+            expression (str): 数式。中置記法
+
+        Raises:
+            SyntaxError: 数式以外の入力があった場合 None がありうる
+
+        Returns:
+            list[Tokens]: 
+        """
+        # 数字、演算子、括弧に対応する正規表現パターンを定義します
+        token_specification: list[tuple[str, str]] = [
+            ("NUMBER", r"\d+(\.\d*)?"),  # 数字
+            ("PLUS", r"\+"),  # 足し算
+            ("MINUS", r"-"),  # 引き算
+            ("TIMES", r"\*"),  # 掛け算
+            ("DIVIDE", r"/"),  # 割り算
+            ("LPAREN", r"\("),  # 左括弧
+            ("RPAREN", r"\)"),  # 右括弧
+            ("SKIP", r"[ \t]+"),  # 空白とタブ（無視）
+        ]
+        tokens: list[Token] = []
+        # 正規表現のパターンをまとめます
+        tok_regex = "|".join(f"(?P<{pair[0]}>{pair[1]})" for pair in token_specification)
+        for match in re.finditer(tok_regex, expression):
+            kind = match.lastgroup
+            value = match.group()
+            if kind is None:
+                raise SyntaxError(
+                    "Unexpected token: Unexpected type.設定された正規表現のパターンに属さない入力があった可能性があります"
+                )
+
+            if kind == "NUMBER":
+                value = float(value) if "." in value else int(value)
+            elif kind == "SKIP":
+                continue
+
+            tokens.append((kind, value))
+        return tokens
+
 
     def parse(self) -> Expression:
         """ tokens をパースする """
@@ -123,24 +124,25 @@ class Parser:
         raise SyntaxError(f"Unexpected token: {token}")
 
 
-def evaluate(node: Expression) -> int | float:
-    """ 計算する関数 """
-    if isinstance(node, tuple) and len(node) == 3:
-        op, left, right = node[0], node[1], node[2]
-        if op == "PLUS":
-            return evaluate(left) + evaluate(right)
-        if op == "MINUS":
-            return evaluate(left) - evaluate(right)
-        if op == "TIMES":
-            return evaluate(left) * evaluate(right)
-        if op == "DIVIDE":
-            return evaluate(left) / evaluate(right)
-    # ('NUMBER', value) の形式なので、値部分を返す
-    ans = node[1]
-    if isinstance(ans, str) or ans is None:
-        raise SyntaxError("文字列またはNoneを答えにしようとしている")
-    # 確実に int/float の場合だけ返す
-    return ans if isinstance(ans, (int, float)) else 0
+    @staticmethod
+    def evaluate(node: Expression) -> int | float:
+        """ 計算する関数 """
+        if isinstance(node, tuple) and len(node) == 3:
+            op, left, right = node[0], node[1], node[2]
+            if op == "PLUS":
+                return Parser.evaluate(left) + Parser.evaluate(right)
+            if op == "MINUS":
+                return Parser.evaluate(left) - Parser.evaluate(right)
+            if op == "TIMES":
+                return Parser.evaluate(left) * Parser.evaluate(right)
+            if op == "DIVIDE":
+                return Parser.evaluate(left) / Parser.evaluate(right)
+        # ('NUMBER', value) の形式なので、値部分を返す
+        ans = node[1]
+        if isinstance(ans, str) or ans is None:
+            raise SyntaxError("文字列またはNoneを答えにしようとしている")
+        # 確実に int/float の場合だけ返す
+        return ans if isinstance(ans, (int, float)) else 0
 
 
 if __name__ == "__main__":
