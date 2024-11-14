@@ -12,6 +12,17 @@ type Expression = (
 
 
 def tokenize(expression):
+    """tokenize
+
+    Args:
+        expression (str): 数式。中置記法
+
+    Raises:
+        SyntaxError: 数式以外の入力があった場合 None がありうる
+
+    Returns:
+        list[Tokens]: 
+    """
     # 数字、演算子、括弧に対応する正規表現パターンを定義します
     token_specification: list[tuple[str, str]] = [
         ("NUMBER", r"\d+(\.\d*)?"),  # 数字
@@ -44,6 +55,16 @@ def tokenize(expression):
 
 
 class Parser:
+    """Parser
+    list[Tokens] -> Expression
+
+    Raises:
+        SyntaxError: 
+        SyntaxError: 
+
+    Returns:
+
+    """
     tokens: list[Token]
     pos: int
 
@@ -52,6 +73,7 @@ class Parser:
         self.pos = 0
 
     def parse(self) -> Expression:
+        """ tokens をパースする """
         return self.expr()
 
     def consume(self, expected_type: str) -> Token:
@@ -93,7 +115,7 @@ class Parser:
         if token[0] == "NUMBER":
             self.consume("NUMBER")
             return token
-        elif token[0] == "LPAREN":
+        if token[0] == "LPAREN":
             self.consume("LPAREN")
             node = self.expr()
             self.consume("RPAREN")
@@ -101,8 +123,8 @@ class Parser:
         raise SyntaxError(f"Unexpected token: {token}")
 
 
-# 出力例: ('+', ('NUMBER', 3), ('*', ('NUMBER', 5), ('-', ('NUMBER', 2), ('NUMBER', 8))))
 def evaluate(node: Expression) -> int | float:
+    """ 計算する関数 """
     if isinstance(node, tuple) and len(node) == 3:
         op, left, right = node[0], node[1], node[2]
         if op == "PLUS":
@@ -122,12 +144,4 @@ def evaluate(node: Expression) -> int | float:
 
 
 if __name__ == "__main__":
-    # テスト
-    TOKENS = tokenize("3 + 5 * (2 - 8)")
-    parser = Parser(TOKENS)
-    tree = parser.parse()
-    # print("tree:", tree)
-
-    # テスト
-    result = evaluate(tree)
-    # print("3:", result)  # 出力例: -22.0
+    pass
