@@ -8,4 +8,8 @@ uncommited:
 format:
 	@uv run ruff format ./src/*py
 
-
+version:
+	@python -V
+test:
+	@cd src; \
+	python -m unittest discover
