@@ -5,14 +5,7 @@ from typing import Literal, cast
 # 型エイリアスを使用してトークンと構文木の型を定義
 type Terms = Literal['PLUS','MINUS','TIMES','DIVIDE']
 type Token = tuple[str, int | float | str]
-# type Expression = Token | tuple[str, Expression, Expression]
 type Expression = Token | tuple[Terms, Expression, Expression]
-
-def g(arg:bool):
-    """ TEST """
-    if arg is True:
-        return "T"
-    return "F"
 
 class Parser:
     """Parser
