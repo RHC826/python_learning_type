@@ -13,3 +13,6 @@ version:
 test:
 	@cd src; \
 	python -m unittest discover
+
+pytest:
+	@pytest --cov;
