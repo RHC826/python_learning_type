@@ -110,7 +110,7 @@ class Parser:
             op = self.tokens[self.pos][0]
 
             if op not in ['PLUS','MINUS','TIMES','DIVIDE']:
-                raise ValueError()
+                raise ValueError("Unexpected operator")
             # op を Literal['PLUS', 'MINUS', 'TIMES', 'DIVIDE'] にキャスト
             op = cast(Terms, op)
 
@@ -131,7 +131,7 @@ class Parser:
             right = self.factor()
 
             if op not in ['PLUS','MINUS','TIMES','DIVIDE']:
-                raise ValueError()
+                raise ValueError("Unexpected operator")
             # op を Literal['PLUS', 'MINUS', 'TIMES', 'DIVIDE'] にキャスト
             op = cast(Terms, op)
 
