@@ -4,11 +4,7 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = [
-    "mypy>=1.13.0",
-    "pylint>=3.3.1",
-    "ruff>=0.7.1",
-]
+dependencies = []
 [tool.mypy]
 python_version = "3.13"
 strict = true
@@ -36,4 +32,17 @@ reportMissingTypeStubs = false
 
 pythonVersion = "3.13"
 pythonPlatform = "Linux"
+
+[tool.pytest.ini_options]
+pythonpath = "src"
+#testpaths = ["tests",]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.13.0",
+    "pylint>=3.3.1",
+    "pytest-cov>=6.0.0",
+    "pytest>=8.3.3",
+    "ruff>=0.7.3",
+]
 

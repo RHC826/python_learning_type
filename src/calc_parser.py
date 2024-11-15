@@ -1,10 +1,18 @@
 """parser :簡単な数式"""
 import re
+from typing import Literal, cast
 
 # 型エイリアスを使用してトークンと構文木の型を定義
+type Terms = Literal['PLUS','MINUS','TIMES','DIVIDE']
 type Token = tuple[str, int | float | str]
-type Expression = Token | tuple[str, Expression, Expression]
+# type Expression = Token | tuple[str, Expression, Expression]
+type Expression = Token | tuple[Terms, Expression, Expression]
 
+def g(arg:bool):
+    """ TEST """
+    if arg is True:
+        return "T"
+    return "F"
 
 class Parser:
     """Parser
@@ -100,6 +108,12 @@ class Parser:
             "MINUS",
         ):
             op = self.tokens[self.pos][0]
+
+            if op not in ['PLUS','MINUS','TIMES','DIVIDE']:
+                raise ValueError()
+            # op を Literal['PLUS', 'MINUS', 'TIMES', 'DIVIDE'] にキャスト
+            op = cast(Terms, op)
+
             self.consume(op)
             right = self.term()
             node = (op, node, right)
@@ -115,6 +129,12 @@ class Parser:
             op = self.tokens[self.pos][0]
             self.consume(op)
             right = self.factor()
+
+            if op not in ['PLUS','MINUS','TIMES','DIVIDE']:
+                raise ValueError()
+            # op を Literal['PLUS', 'MINUS', 'TIMES', 'DIVIDE'] にキャスト
+            op = cast(Terms, op)
+
             node = (op, node, right)
         return node
 
