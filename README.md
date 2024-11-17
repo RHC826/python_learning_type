@@ -25,3 +25,4 @@ Python の型に関する勉強用リポジトリ。
 
 ## Link
 
+- [Typing PEPs | peps.python.org](https://peps.python.org/topic/typing/)
