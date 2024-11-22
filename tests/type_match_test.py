@@ -5,7 +5,7 @@ from src.type_match import main
 
 
 class TestUnionMethod(unittest.TestCase):
-    """ src/type_match.py unittest"""
+    """src/type_match.py unittest"""
 
     def test_str(self):
         """str"""
