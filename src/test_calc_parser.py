@@ -1,4 +1,5 @@
-""" 電卓プログラム テスト"""
+"""電卓プログラム テスト"""
+
 import unittest
 import calc_parser
 
@@ -7,7 +8,7 @@ class TestUnionMethod(unittest.TestCase):
     """calc_parser.py unittest"""
 
     def test_tokenize(self):
-        """ トークナイズテスト: 3 + 5 * (2 - 8) """
+        """トークナイズテスト: 3 + 5 * (2 - 8)"""
         # pylint: disable=line-too-long
         tokenized = r"[('NUMBER', 3), ('PLUS', '+'), ('NUMBER', 5), ('TIMES', '*'), ('LPAREN', '('), ('NUMBER', 2), ('MINUS', '-'), ('NUMBER', 8), ('RPAREN', ')')]"
         # pylint: enable=line-too-long
@@ -18,7 +19,7 @@ class TestUnionMethod(unittest.TestCase):
         )
 
     def test_parser(self):
-        """ 計算テスト: 3 + 5 * (2 - 8) """
+        """計算テスト: 3 + 5 * (2 - 8)"""
         # テスト
         tokens = calc_parser.Parser.tokenize("3 + 5 * (2 - 8)")
         parser = calc_parser.Parser(tokens)

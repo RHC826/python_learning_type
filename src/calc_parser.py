@@ -1,11 +1,13 @@
 """parser :簡単な数式"""
+
 import re
 from typing import Literal, cast
 
 # 型エイリアスを使用してトークンと構文木の型を定義
-type Terms = Literal['PLUS','MINUS','TIMES','DIVIDE']
+type Terms = Literal["PLUS", "MINUS", "TIMES", "DIVIDE"]
 type Token = tuple[str, int | float | str]
 type Expression = Token | tuple[Terms, Expression, Expression]
+
 
 class Parser:
     """Parser
@@ -49,7 +51,7 @@ class Parser:
         tok_regex = "|".join(
             f"(?P<{pair[0]}>{pair[1]})" for pair in token_specification
         )
-        tokens:list[Token] = []
+        tokens: list[Token] = []
 
         for match in re.finditer(tok_regex, expression):
             kind = match.lastgroup
@@ -102,7 +104,7 @@ class Parser:
         ):
             op = self.tokens[self.pos][0]
 
-            if op not in ['PLUS','MINUS','TIMES','DIVIDE']:
+            if op not in ["PLUS", "MINUS", "TIMES", "DIVIDE"]:
                 raise ValueError("Unexpected operator")
             # op を Literal['PLUS', 'MINUS', 'TIMES', 'DIVIDE'] にキャスト
             op = cast(Terms, op)
@@ -123,7 +125,7 @@ class Parser:
             self.consume(op)
             right = self.factor()
 
-            if op not in ['PLUS','MINUS','TIMES','DIVIDE']:
+            if op not in ["PLUS", "MINUS", "TIMES", "DIVIDE"]:
                 raise ValueError("Unexpected operator")
             # op を Literal['PLUS', 'MINUS', 'TIMES', 'DIVIDE'] にキャスト
             op = cast(Terms, op)
@@ -167,7 +169,6 @@ class Parser:
                 return value
             case _:
                 raise SyntaxError("無効なノード")
-
 
 
 if __name__ == "__main__":
