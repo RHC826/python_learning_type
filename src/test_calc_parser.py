@@ -1,7 +1,7 @@
 """電卓プログラム テスト"""
 
 import unittest
-import calc_parser
+from src.calc_parser import Parser
 
 
 class TestUnionMethod(unittest.TestCase):
@@ -14,20 +14,20 @@ class TestUnionMethod(unittest.TestCase):
         # pylint: enable=line-too-long
         self.assertEqual(
             msg="Warning!",
-            first=str(calc_parser.Parser.tokenize("3 + 5 * (2 - 8)")),
+            first=str(Parser.tokenize("3 + 5 * (2 - 8)")),
             second=tokenized,
         )
 
     def test_parser(self):
         """計算テスト: 3 + 5 * (2 - 8)"""
         # テスト
-        tokens = calc_parser.Parser.tokenize("3 + 5 * (2 - 8)")
-        parser = calc_parser.Parser(tokens)
+        tokens = Parser.tokenize("3 + 5 * (2 - 8)")
+        parser = Parser(tokens)
         tree = parser.parse()
 
         # テスト
         # result = calc_parser.Parser.evaluate_expression(tree)
-        result = calc_parser.Parser.evaluate(tree)
+        result = Parser.evaluate(tree)
         self.assertEqual(first=result, second=-27)
 
 

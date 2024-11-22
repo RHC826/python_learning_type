@@ -34,8 +34,8 @@ pythonVersion = "3.13"
 pythonPlatform = "Linux"
 
 [tool.pytest.ini_options]
-pythonpath = "src"
-#testpaths = ["tests",]
+pythonpath = ["src",]
+testpaths = ["tests","src"]
 
 [dependency-groups]
 dev = [

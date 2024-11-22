@@ -4,7 +4,7 @@ Python の型に関する勉強用リポジトリ。
 
 ## ツール
 
-## デバッガ
+### デバッガ
 
 - pdb
     - [pdb --- Python デバッガ — Python 3.13.0 ドキュメント](https://docs.python.org/ja/3/library/pdb.html)
