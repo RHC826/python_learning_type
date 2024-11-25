@@ -12,3 +12,4 @@ wheels/
 # Personal Files
 .vscode
 .coverage
+docs
