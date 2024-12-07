@@ -21,6 +21,7 @@ def get_info(query: str = "sunflowers") -> None:
 
     request = requests.get(
         f"{domain}/public/collection/v1/search?q={query}&=hasImages=true",
+        # タグによる検索
         # f"{domain}/public/collection/v1/search?q={query}&=hasImages=true&=tags=true",
         timeout=10,
     )
@@ -50,6 +51,7 @@ def get_info(query: str = "sunflowers") -> None:
                                     ensure_ascii=False,
                                     indent=4,
                                 )
+                                print(_load)
 
                                 match _load:
                                     # 画像が存在するケース
@@ -63,9 +65,8 @@ def get_info(query: str = "sunflowers") -> None:
                         time.sleep(0.1)
                         if cnt > 10:
                             break
-    print(allow_list)
+    # print(allow_list)
     filter_tag = "Portraits"
-    assert len(allow_list) > 0, "len(res) == 0"
     mini_data = [
         (
             data["title"],
@@ -73,17 +74,33 @@ def get_info(query: str = "sunflowers") -> None:
             data["tags"],
         )
         for request in allow_list
-        if (data := json.loads(request.text))  # `data`を解析
-        and (tags := data.get("tags")) is not None  # `tags`がNoneでないことを確認
+        if (data := json.loads(request.text))
+        and (tags := data.get("tags")) is not None
+        # MEMO: こんなことできるんだとビックリ
+        # 次のようなことをしたい
+        # for tag in tags
+        # if any(map(lambda x: x.get("tags") == filter_tag, tags))
         for tag in tags
         if tag.get("term") == filter_tag  # タグの中で`term`が tag であるものを抽出
     ]
+    # MEMO: chatGPT が提案した改善案。 data := json の部分が動かなかった
+    #mini_data = [
+    #    (
+    #        data["title"],
+    #        f"https://www.metmuseum.org/art/collection/search/{data['objectID']}",
+    #        data["tags"],
+    #    )
+    #    for request in allow_list
+    #    for tag in (data := json.loads(request.text))["tags"]
+    #    if tag.get("term") == filter_tag
+    #]
+
     for i, j in enumerate(mini_data):
         print(i, j)
 
     print(f"total:{total}")
-    with open("./test3.json", "w+", encoding="utf-8") as w:
-        json.dump([json.loads(request.text) for request in allow_list], w)
+    # with open("./test3.json", "w+", encoding="utf-8") as w:
+    #     json.dump([json.loads(request.text) for request in allow_list], w)
 
 
 class ApiResponse(TypedDict):
@@ -94,7 +111,7 @@ class ApiResponse(TypedDict):
 
 
 def get_address(query: str = "sunflowers") -> None:
-    """1. キーワード検索 2. 該当する作品のページのアドレスを得るi
+    """1. キーワード検索 2. 該当する作品のページのアドレスを得る
     Document URL:https://metmuseum.github.io/
     """
     domain = "https://collectionapi.metmuseum.org"
@@ -137,8 +154,9 @@ Please input your command:
         case ["info", _]:
             get_info(Tokens[1])
         # AS パターン
-        case _ as Word if len(Word) > 0:
-            print(len(Word), f"{Word=}")
+        case [_,_] as Word if len(Word) > 0:
+            print(type(Word), f"{Word=}")
             raise ValueError("クエリが不定形です")
-        case capt:
-            print(f"{capt=}")
+        # キャプチャパターン
+        case ohter:
+            raise ValueError("入力がありません")

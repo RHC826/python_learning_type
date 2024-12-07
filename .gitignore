@@ -13,3 +13,4 @@ wheels/
 .vscode
 .coverage
 docs
+fld/src/*
